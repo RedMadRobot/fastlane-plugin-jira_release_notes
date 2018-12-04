@@ -20,6 +20,22 @@ Release notes from JIRA for version
 Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
 
 
+## Options
+
+```
+fastlane action jira_release_notes
+```
+
+Key | Description | Env Var | Default
+----|-------------|---------|--------
+url | URL for Jira instance | FL_JIRA_SITE |
+username | Username for Jira instance | FL_JIRA_USERNAME |
+password | Password for Jira | FL_JIRA_PASSWORD |
+project | Jira project name | FL_JIRA_PROJECT |
+version | Jira project version | FL_JIRA_PROJECT_VERSION |
+format | Format text. Plain, html or none | FL_JIRA_RELEASE_NOTES_FORMAT | plain
+
+
 ## Run tests for this plugin
 
 To run both the tests, and code style validation, run
