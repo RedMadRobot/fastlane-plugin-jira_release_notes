@@ -1,0 +1,25 @@
+lane :test do
+  gym
+  notes = jira_release_notes(
+    username: "me",
+    password: "123",
+    url:      "https://jira.example.com",
+    project:  "OX",
+    version:  "0.1",
+    foramt: "plain"
+  )
+  crashlytics(
+    notes: notes
+  )
+  message = jira_release_notes(
+    username: "me",
+    password: "123",
+    url:      "https://jira.example.com",
+    project:  "OX",
+    version:  "0.1",
+    foramt: "html"
+  )
+  slack(
+    message: message
+  )
+end
