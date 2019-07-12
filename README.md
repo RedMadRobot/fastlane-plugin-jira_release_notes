@@ -26,11 +26,13 @@ Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plu
 fastlane action jira_release_notes
 ```
 
+[How to generate an API Access Token](https://confluence.atlassian.com/cloud/api-tokens-938839638.html)
+
 Key | Description | Env Var | Default
 ----|-------------|---------|--------
 url | URL for Jira instance | FL_JIRA_SITE |
 username | Username for Jira instance | FL_JIRA_USERNAME |
-password | Password for Jira | FL_JIRA_PASSWORD |
+password | Password for Jira or api token | FL_JIRA_PASSWORD |
 project | Jira project name | FL_JIRA_PROJECT |
 version | Jira project version | FL_JIRA_PROJECT_VERSION |
 format | Format text. Plain, html or none | FL_JIRA_RELEASE_NOTES_FORMAT | plain
