@@ -36,6 +36,7 @@ password | Password for Jira or api token | FL_JIRA_PASSWORD |
 project | Jira project name | FL_JIRA_PROJECT |
 version | Jira project version | FL_JIRA_PROJECT_VERSION |
 format | Format text. Plain, html or none | FL_JIRA_RELEASE_NOTES_FORMAT | plain
+max_results | Maximum number of issues | FL_JIRA_RELEASE_NOTES_MAX_RESULTS | 50
 
 
 ## Run tests for this plugin
