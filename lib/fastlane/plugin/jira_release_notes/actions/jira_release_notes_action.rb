@@ -15,6 +15,7 @@ module Fastlane
 
         version = params[:version]
         project = params[:project]
+        max_results = params[:max_results].to_i
         issues = []
 
         UI.message("Fetch issues from JIRA project '#{project}', version '#{version}'")
@@ -24,9 +25,11 @@ module Fastlane
             versions = client.Project.find(project).versions
                              .select { |v| version.match(v.name) }
                              .map { |v| "'#{v.name}'" } .join(', ')
-            issues = client.Issue.jql("PROJECT = '#{project}' AND fixVersion in (#{versions})")
+            issues = client.Issue.jql("PROJECT = '#{project}' AND fixVersion in (#{versions})",
+                                      max_results: max_results)
           else
-            issues = client.Issue.jql("PROJECT = '#{project}' AND fixVersion = '#{version}'")
+            issues = client.Issue.jql("PROJECT = '#{project}' AND fixVersion = '#{version}'",
+                                      max_results: max_results)
           end
         rescue JIRA::HTTPError => e
           fields = [e.code, e.message]
@@ -103,7 +106,11 @@ module Fastlane
                                        env_name: "FL_JIRA_RELEASE_NOTES_FORMAT",
                                        description: "Format text. Plain, html or none",
                                        sensitive: true,
-                                       default_value: "plain")
+                                       default_value: "plain"),
+          FastlaneCore::ConfigItem.new(key: :max_results,
+                                       env_name: "FL_JIRA_RELEASE_NOTES_MAX_RESULTS",
+                                       description: "Maximum number of issues",
+                                       default_value: "50")
         ]
       end
 
