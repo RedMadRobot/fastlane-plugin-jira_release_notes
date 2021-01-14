@@ -19,6 +19,19 @@ Release notes from JIRA for version
 
 Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
 
+```ruby
+lane :notes do
+  text = jira_release_notes(
+    username: "me",
+    password: "123", # password or api token
+    url:      "https://jira.example.com",
+    project:  "OX",
+    version:  "0.1",
+    foramt: "plain"
+  )
+  puts text
+end
+```
 
 ## Options
 
