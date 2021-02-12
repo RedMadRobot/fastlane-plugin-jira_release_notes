@@ -15,6 +15,7 @@ module Fastlane
 
         version = params[:version]
         project = params[:project]
+        status = params[:status]
         max_results = params[:max_results].to_i
         issues = []
 
@@ -25,19 +26,22 @@ module Fastlane
             versions = client.Project.find(project).versions
                              .select { |v| version.match(v.name) }
                              .map { |v| "'#{v.name}'" } .join(', ')
-            issues = client.Issue.jql("PROJECT = '#{project}' AND fixVersion in (#{versions})",
-                                      max_results: max_results)
+            jql = "PROJECT = '#{project}' AND fixVersion in (#{versions})"
           else
-            issues = client.Issue.jql("PROJECT = '#{project}' AND fixVersion = '#{version}'",
-                                      max_results: max_results)
+            jql = "PROJECT = '#{project}' AND fixVersion = '#{version}'"
           end
+          unless status.nil? or status.empty?
+            jql += " AND status = '#{status}'"
+          end
+          issues = client.Issue.jql(jql,max_results: max_results)
+
         rescue JIRA::HTTPError => e
           fields = [e.code, e.message]
           fields << e.response.body if e.response.content_type == "application/json"
           UI.user_error!("#{e} #{fields.join(', ')}")
         end
 
-        UI.success("📝  #{issues.count} issues from JIRA project '#{project}', version '#{version}'")
+        UI.success("📝  #{issues.count} issues from JIRA project '#{project}', version '#{version}', status '#{status}'")
 
         case params[:format]
         when "plain"
@@ -93,6 +97,11 @@ module Fastlane
                                        verify_block: proc do |value|
                                          UI.user_error!("No Jira project name") if value.to_s.length == 0
                                        end),
+          FastlaneCore::ConfigItem.new(key: :status,
+                                       env_name: "FL_JIRA_STATUS",
+                                       description: "Jira issue status",
+                                       sensitive: true,
+                                       default_value: ""),
           FastlaneCore::ConfigItem.new(key: :version,
                                        env_name: "FL_JIRA_PROJECT_VERSION",
                                        description: "Jira project version",

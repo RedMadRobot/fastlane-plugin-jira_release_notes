@@ -2,6 +2,7 @@
 Gemfile.lock
 
 ## Documentation cache and generated files:
+.idea
 /.yardoc/
 /_yardoc/
 /doc/

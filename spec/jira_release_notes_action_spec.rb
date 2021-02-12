@@ -5,6 +5,7 @@ describe Fastlane::Actions::JiraReleaseNotesAction do
     @url = 'http://mydomain.atlassian.net:443'
     @project = 'ABC'
     @version = '1.0'
+    @status = 'Testable'
   end
 
   describe 'Release Notes' do
@@ -28,6 +29,22 @@ describe Fastlane::Actions::JiraReleaseNotesAction do
         instance_double("Issue", key: "#{@project}-02", summary: 'text 2')
       ]
       expect(JIRA::Client).to receive(:new).with(@options).and_call_original
+    end
+
+    describe 'Using status' do
+      before(:each) do
+        @params[:status] = @status
+      end
+
+      it 'string status' do
+        expect(JIRA::Resource::Issue).to receive(:jql) do |client, query|
+          expect(client.options).to include(@options)
+          expect(query).to eql("PROJECT = '#{@project}' AND fixVersion = '#{@version}' AND status = '#{@status}'")
+        end.and_return(@issues)
+
+        notes = Fastlane::Actions::JiraReleaseNotesAction.run(@params)
+        expect(notes).to eql(@issues)
+      end
     end
 
     describe 'Formats of version' do
