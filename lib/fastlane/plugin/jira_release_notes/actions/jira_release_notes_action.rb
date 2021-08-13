@@ -69,6 +69,10 @@ module Fastlane
         "List of issues from jira. Formatted string or class"
       end
 
+      def self.return_type
+        :string
+      end
+
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :url,
