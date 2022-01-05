@@ -112,7 +112,7 @@ module Fastlane
                                        sensitive: true,
                                        default_value: ""),
           FastlaneCore::ConfigItem.new(key: :components,
-                                       env_name: "FL_JIRA_components",
+                                       env_name: "FL_JIRA_COMPONENTS",
                                        description: "Jira issue components",
                                        type: Array,
                                        sensitive: true,
