@@ -6,6 +6,7 @@ describe Fastlane::Actions::JiraReleaseNotesAction do
     @project = 'ABC'
     @version = '1.0'
     @status = 'Testable'
+    @components = ["API", "UI"]
   end
 
   describe 'Release Notes' do
@@ -40,6 +41,22 @@ describe Fastlane::Actions::JiraReleaseNotesAction do
         expect(JIRA::Resource::Issue).to receive(:jql) do |client, query|
           expect(client.options).to include(@options)
           expect(query).to eql("PROJECT = '#{@project}' AND fixVersion = '#{@version}' AND status = '#{@status}'")
+        end.and_return(@issues)
+
+        notes = Fastlane::Actions::JiraReleaseNotesAction.run(@params)
+        expect(notes).to eql(@issues)
+      end
+    end
+
+    describe 'Using components' do
+      before(:each) do
+        @params[:components] = @components
+      end
+
+      it 'array components' do
+        expect(JIRA::Resource::Issue).to receive(:jql) do |client, query|
+          expect(client.options).to include(@options)
+          expect(query).to eql("PROJECT = '#{@project}' AND fixVersion = '#{@version}' AND component in (#{@components.map{|s| "\"#{s}\""}.join(", ")})")
         end.and_return(@issues)
 
         notes = Fastlane::Actions::JiraReleaseNotesAction.run(@params)
