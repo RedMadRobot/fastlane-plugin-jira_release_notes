@@ -16,6 +16,7 @@ module Fastlane
         version = params[:version]
         project = params[:project]
         status = params[:status]
+        components = params[:components]
         max_results = params[:max_results].to_i
         issues = []
 
@@ -33,6 +34,10 @@ module Fastlane
           unless status.nil? or status.empty?
             jql += " AND status = '#{status}'"
           end
+          unless components.nil? or components.empty?
+            jql += " AND component in (#{components.map{|s| "\"#{s}\""}.join(", ")})"
+          end
+          UI.message("jql '#{jql}'")
           issues = client.Issue.jql(jql,max_results: max_results)
 
         rescue JIRA::HTTPError => e
@@ -41,7 +46,7 @@ module Fastlane
           UI.user_error!("#{e} #{fields.join(', ')}")
         end
 
-        UI.success("📝  #{issues.count} issues from JIRA project '#{project}', version '#{version}', status '#{status}'")
+        UI.success("📝  #{issues.count} issues from JIRA project '#{project}', version '#{version}', status '#{status}', components '#{components}'")
 
         case params[:format]
         when "plain"
@@ -104,6 +109,12 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :status,
                                        env_name: "FL_JIRA_STATUS",
                                        description: "Jira issue status",
+                                       sensitive: true,
+                                       default_value: ""),
+          FastlaneCore::ConfigItem.new(key: :components,
+                                       env_name: "FL_JIRA_COMPONENTS",
+                                       description: "Jira issue components",
+                                       type: Array,
                                        sensitive: true,
                                        default_value: ""),
           FastlaneCore::ConfigItem.new(key: :version,
