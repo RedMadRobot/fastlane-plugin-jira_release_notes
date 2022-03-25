@@ -6,11 +6,12 @@ module Fastlane
         require 'jira-ruby'
 
         client = JIRA::Client.new(
-          username:     params[:username],
-          password:     params[:password],
-          site:         params[:url],
-          context_path: '',
-          auth_type:    :basic
+          username:        params[:username],
+          password:        params[:password],
+          site:            params[:url],
+          default_headers: params[:default_headers],
+          context_path:    '',
+          auth_type:       :basic
         )
 
         version = params[:version]
