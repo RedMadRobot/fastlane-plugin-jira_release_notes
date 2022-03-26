@@ -6,11 +6,12 @@ module Fastlane
         require 'jira-ruby'
 
         client = JIRA::Client.new(
-          username:     params[:username],
-          password:     params[:password],
-          site:         params[:url],
-          context_path: '',
-          auth_type:    :basic
+          username:        params[:username],
+          password:        params[:password],
+          site:            params[:url],
+          default_headers: params[:headers],
+          context_path:    '',
+          auth_type:       :basic
         )
 
         version = params[:version]
@@ -105,6 +106,13 @@ module Fastlane
                                        sensitive: true,
                                        verify_block: proc do |value|
                                          UI.user_error!("No Jira project name") if value.to_s.length == 0
+                                       end),
+          FastlaneCore::ConfigItem.new(key: :headers,
+                                       env_name: "FL_JIRA_HEADERS",
+                                       description: "Additional headers to connect to Jira",
+                                       sensitive: true,
+                                       type: Hash,
+                                       default_value: {}),
                                        end),
           FastlaneCore::ConfigItem.new(key: :status,
                                        env_name: "FL_JIRA_STATUS",
